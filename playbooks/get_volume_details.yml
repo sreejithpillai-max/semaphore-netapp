@@ -1,0 +1,29 @@
+---
+- name: Get NetApp Volume Details
+  hosts: netapp
+  gather_facts: false
+
+  collections:
+    - netapp.ontap
+
+  tasks:
+
+    - name: Get list of volumes
+      na_ontap_rest_info:
+        hostname: "{{ ontap_hostname }}"
+        username: "{{ ontap_username }}"
+        password: "{{ ontap_password }}"
+        https: "{{ https }}"
+        validate_certs: "{{ validate_certs }}"
+        use_python_keys: true
+        gather_subset:
+          - storage/volumes
+      register: volume_info
+
+    - name: Display volume information
+      debug:
+        msg: |
+          Volume: {{ item.name }}
+          Size (GB): {{ (item.size / 1024 / 1024 / 1024) | round(2) }}
+          Used (%) : {{ item.space.used_percent }}
+      loop: "{{ volume_info.ontap_info.storage_volumes.records }}"
