@@ -1,0 +1,16 @@
+netapp-automation/
+│
+├── README.md
+│
+├── inventories/
+│   └── semaphore_inventory.ini
+│
+├── vars/
+│   └── example_credentials.yml   (not used by Semaphore, just reference)
+│
+├── playbooks/
+│   ├── test_connection.yml       (TEST TASK)
+│   └── get_volume_details.yml    (MAIN PLAYBOOK)
+│
+└── roles/
+    └── (optional future roles)
