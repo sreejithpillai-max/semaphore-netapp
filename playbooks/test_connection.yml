@@ -1,0 +1,24 @@
+---
+- name: Test Connection to NetApp ONTAP
+  hosts: netapp
+  gather_facts: false
+
+  collections:
+    - netapp.ontap
+
+  tasks:
+
+    - name: Check ONTAP cluster system info
+      na_ontap_rest_info:
+        hostname: "{{ ontap_hostname }}"
+        username: "{{ ontap_username }}"
+        password: "{{ ontap_password }}"
+        https: "{{ https }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - cluster/nodes
+      register: test_output
+
+    - name: Print ONTAP node names
+      debug:
+        msg: "Connected successfully — Nodes detected: {{ test_output.ontap_info.cluster_nodes.records | map(attribute='name') | list }}"
